@@ -1,35 +1,25 @@
-from typing import Iterable, List
-from collections import Counter
+from typing import Iterable, List, Tuple, Generator
 from pathlib import Path
 
 from advent_of_code.util import timing
 
 
-class Rule:
-    def __init__(self, rule: str) -> None:
-        self._letter = rule[-1]
-        min_count, max_count = rule.split()[0].split('-')
-        self._min = int(min_count)
-        self._max = int(max_count)
-
-    def is_valid(self, password: str) -> bool:
-        count = Counter(password)[self._letter]
-        return self._min <= count <= self._max
+def parse_rule(rule: str) -> Tuple[int, int, str]:
+    min_count, max_count = map(int, rule.split()[0].split('-'))
+    return min_count, max_count, rule[-1]
 
 
-class SecondRule(Rule):
-    def is_valid(self, password: str) -> bool:
-        # Extra space in input --> don't worry about off-by-one in 1-indexed min/max.
-        count = Counter((password[self._min], password[self._max]))[self._letter]
-        return count == 1
+def part1_generator(passwords: Iterable[List[str]]) -> Generator[bool, Iterable[List[str]], None]:
+    for rule, password in passwords:
+        i, j, a = parse_rule(rule)
+        yield i <= password.count(a) <= j
 
 
-def part1(passwords: Iterable[List[str]]) -> int:
-    return sum((Rule(rule).is_valid(password) for rule, password in passwords))
-
-
-def part2(passwords: Iterable[List[str]]) -> int:
-    return sum((SecondRule(rule).is_valid(password) for rule, password in passwords))
+def part2_generator(passwords: Iterable[List[str]]) -> Generator[bool, Iterable[List[str]], None]:
+    for rule, password in passwords:
+        i, j, a = parse_rule(rule)
+        # XOR.
+        yield (password[i] == a) != (password[j] == a)
 
 
 def main() -> None:
@@ -37,11 +27,11 @@ def main() -> None:
         passwords = [line.split(':') for line in file]
 
     with timing("Part 1"):
-        solution = part1(passwords)
+        solution = sum(part1_generator(passwords))
     print(solution)
 
     with timing("Part 2"):
-        solution = part2(passwords)
+        solution = sum(part2_generator(passwords))
     print(solution)
 
 
