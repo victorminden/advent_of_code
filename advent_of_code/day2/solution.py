@@ -3,35 +3,36 @@ from pathlib import Path
 
 from advent_of_code.util import timing
 
+Rule = Tuple[int, int, str]
 
-def parse_rule(rule: str) -> Tuple[int, int, str]:
+
+def parse_rule(rule: str) -> Rule:
     min_count, max_count = map(int, rule.split()[0].split('-'))
     return min_count, max_count, rule[-1]
 
 
-def part1_generator(passwords: Iterable[List[str]]) -> Generator[bool, Iterable[List[str]], None]:
-    for rule, password in passwords:
-        i, j, a = parse_rule(rule)
-        yield i <= password.count(a) <= j
+def part1(passwords: Iterable[Tuple[Rule, str]]) -> int:
+    return sum((i <= password.count(a) <= j for (i, j, a), password in passwords))
 
 
-def part2_generator(passwords: Iterable[List[str]]) -> Generator[bool, Iterable[List[str]], None]:
-    for rule, password in passwords:
-        i, j, a = parse_rule(rule)
-        # XOR.
-        yield (password[i] == a) != (password[j] == a)
+def part2(passwords: Iterable[Tuple[Rule, str]]) -> int:
+    # Rule was expressed in 1-based indexing.
+    return sum(((password[i - 1] == a) != (password[j - 1] == a) for (i, j, a), password in passwords))
 
 
 def main() -> None:
+    passwords: List[Tuple[Rule, str]] = []
     with open(Path(__file__).parent.joinpath("input.txt")) as file:
-        passwords = [line.split(':') for line in file]
+        for line in file:
+            rule, password = line.split(':')
+            passwords.append((parse_rule(rule), password.lstrip()))
 
     with timing("Part 1"):
-        solution = sum(part1_generator(passwords))
+        solution = part1(passwords)
     print(solution)
 
     with timing("Part 2"):
-        solution = sum(part2_generator(passwords))
+        solution = part2(passwords)
     print(solution)
 
 
