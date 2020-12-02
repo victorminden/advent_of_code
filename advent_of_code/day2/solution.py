@@ -1,4 +1,4 @@
-from typing import Iterable, List, Tuple, Generator
+from typing import Iterable, List, Tuple
 from pathlib import Path
 
 from advent_of_code.util import timing
