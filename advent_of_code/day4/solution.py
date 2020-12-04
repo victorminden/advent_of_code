@@ -32,7 +32,7 @@ def _passports_with_all_keys(passports: Iterator[Passport]) -> Iterator[Passport
 
 
 def part1(passports: Iterator[Passport]) -> int:
-    return len(list(_passports_with_all_keys(passports)))
+    return sum(map(lambda p: 1, _passports_with_all_keys(passports)))
 
 
 def part2(passports: Iterator[Passport]) -> int:
