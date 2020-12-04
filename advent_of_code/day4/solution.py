@@ -1,5 +1,5 @@
 import re
-from typing import Dict, List, Iterator
+from typing import Dict, Iterator
 from pathlib import Path
 
 from advent_of_code.util import timing
