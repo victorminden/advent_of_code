@@ -1,41 +1,41 @@
 import re
+from typing import Dict, List, Iterator
 from pathlib import Path
 
 from advent_of_code.util import timing
 
 
-def _validate_digits(s, num_digits=4, min_val=0, max_val=float('inf')):
+Passport = Dict[str, str]
+
+
+def _good_int(s: str, num_digits: int = 4, min_val: int = 0, max_val: int = float('inf')) -> bool:
     return len(s) == num_digits and min_val <= int(s) <= max_val
 
 
-def _validate_height(s):
-    if s.endswith('cm'):
-        return _validate_digits(s[:-2], 3, 150, 193)
-    if s.endswith('in'):
-        return _validate_digits(s[:-2], 2, 59, 76)
-    return False
+def _good_height(s: str) -> bool:
+    return (s.endswith('cm') and _good_int(s[:-2], 3, 150, 193)) or (s.endswith('in') and _good_int(s[:-2], 2, 59, 76))
 
 
 VALIDATIONS = {
-    'byr': lambda s: _validate_digits(s, 4, 1920, 2002),
-    'iyr': lambda s: _validate_digits(s, 4, 2010, 2020),
-    'eyr': lambda s: _validate_digits(s, 4, 2020, 2030),
-    'hgt': _validate_height,
+    'byr': lambda s: _good_int(s, 4, 1920, 2002),
+    'iyr': lambda s: _good_int(s, 4, 2010, 2020),
+    'eyr': lambda s: _good_int(s, 4, 2020, 2030),
+    'hgt': _good_height,
     'hcl': lambda s: re.fullmatch('#[0-9a-f]{6}', s) is not None,
     'ecl': lambda s: s in {'amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'},
-    'pid': lambda s: _validate_digits(s, 9)
+    'pid': lambda s: _good_int(s, 9)
 }
 
 
-def _passports_with_all_keys(passports):
+def _passports_with_all_keys(passports: Iterator[Passport]) -> Iterator[Passport]:
     return filter(lambda p: set(VALIDATIONS.keys()).issubset(p), passports)
 
 
-def part1(passports):
+def part1(passports: Iterator[Passport]) -> int:
     return len(list(_passports_with_all_keys(passports)))
 
 
-def part2(passports):
+def part2(passports: Iterator[Passport]) -> int:
     return sum(
         map(
             lambda p: all(VALIDATIONS.get(k, lambda s: True)(v) for k, v in p.items()),
@@ -44,7 +44,7 @@ def part2(passports):
     )
 
 
-def main():
+def main() -> None:
     passports = []
     with open(Path(__file__).parent.joinpath("input.txt")) as file:
         for kcv_list in map(lambda x: x.split(), file.read().split('\n\n')):
