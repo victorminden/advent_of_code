@@ -8,6 +8,7 @@ BoardingPass = Tuple[str, str]
 
 
 def _find_seat_1d(search_str: str, low: str, high: str, seat_list: Optional[List[int]] = None) -> int:
+    # In retrospect, this is just parsing a binary number and so could be simplified dramatically.
     if seat_list is None:
         seat_list = list(range(2 ** len(search_str)))
 
@@ -21,7 +22,7 @@ def _find_seat_1d(search_str: str, low: str, high: str, seat_list: Optional[List
         s = slice(middle, None)
     else:
         raise ValueError(f"Unknown input character: {search_str[0]}")
-    
+
     return _find_seat_1d(search_str[1:], low, high, seat_list[s])
 
 
