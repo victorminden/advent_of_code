@@ -19,6 +19,7 @@ auto ParseLine(const std::string& line) {
 }
 
 auto ReadInput() {
+    // A little redundant here, but keeping this function entirely separate for re-use later.
     std::ifstream s {"input.txt"};
     std::vector<std::string> lines;
     lines.reserve(kNumLines);
