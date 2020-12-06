@@ -2,40 +2,33 @@
 #include <fstream>
 #include <iostream>
 #include <ranges>
-#include <sstream>
 #include <vector>
 
-auto ParseLine(const std::string& line) {
-    // Format: "(\\d+)-(\\d+) (\\w): (\\w+)"
-    int lo, hi;
-    char a, ignore;
-    std::string password;
-    std::istringstream ss {line};
-    ss >> lo >> ignore >> hi >> a >> ignore >> password;
-    return std::make_tuple(lo, hi, a, password);
-}
+using Rule = std::tuple<int, int, char, std::string>;
 
 int main() {
-    // Is there a better way to get the return type of an auto function without having to pass it input?
+    // Challenge: minimize number of places where types are specified.
+    // Assume proper input format.  Living on the edge.
     std::ifstream s {"input.txt"};
-    std::string line;
-    std::vector<decltype(ParseLine(""))> rules;
-
-    while(std::getline(s, line)) {
-        rules.push_back(ParseLine(line));
+    auto [lo, hi, a, password] = Rule {};
+    std::vector<decltype(std::make_tuple(lo, hi, a, password))> rules;
+    char ignore;
+    // No types follow.
+    while(s >> lo >> ignore >> hi >> a >> ignore >> password) {
+        rules.push_back(std::make_tuple(lo, hi, a, password));
     }
 
-    int valid_count_part1 = std::ranges::count_if(
+    auto valid_count_part1 = std::ranges::count_if(
         rules,
         [](auto rule) {
             auto [lo, hi, a, password] = rule;
-            int count = std::ranges::count(password, a);
+            auto count = std::ranges::count(password, a);
             return lo <= count && count <= hi;
         }
     );
     std::cout << "Part 1: " << valid_count_part1 << std::endl;
 
-    int valid_count_part2 = std::ranges::count_if(
+    auto valid_count_part2 = std::ranges::count_if(
         rules,
         [](auto rule) {
             auto [lo, hi, a, password] = rule;
