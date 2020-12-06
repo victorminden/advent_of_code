@@ -11,7 +11,7 @@ int main() {
     // Assume proper input format.  Living on the edge.
     std::ifstream s {"input.txt"};
     auto [lo, hi, a, password] = Rule {};
-    std::vector<decltype(std::make_tuple(lo, hi, a, password))> rules;
+    std::vector<Rule> rules;
     char ignore;
     // No types follow.
     while(s >> lo >> ignore >> hi >> a >> ignore >> password) {
