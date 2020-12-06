@@ -18,7 +18,7 @@ auto ReadInput() {
 
 // Modifies string in place.
 int TranslateSeat(std::string& id) {
-    std::ranges::transform(id, id.begin(), [](auto c) { return (c == 'F' || c == 'L')? '0' : '1'; });
+    std::ranges::transform(id, id.begin(), [] (auto c) { return (c == 'F' || c == 'L')? '0' : '1'; });
     return std::stoi(id, 0, 2);
 }
 
@@ -28,9 +28,8 @@ int sum_to(int n) {
 }
 
 int main() {
-    auto lines = ReadInput();
     std::vector<int> seats;
-    for (auto line : lines) {
+    for (auto line : ReadInput()) {
         seats.push_back(TranslateSeat(line));
     }
     int max = *std::ranges::max_element(seats);
