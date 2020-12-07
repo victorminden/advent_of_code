@@ -67,9 +67,14 @@ def main() -> None:
             d = d.strip()
             if d.endswith('s'):
                 d = d[:-1]
-            bags[src[:-1]].append((n, d))
+            bags[src[:-1]].append((int(n), d))
+    print(hold_how_many("shiny gold bag", bags) - 1)
 
-    to_process = ["shiny gold bag"]
+
+def hold_how_many(bag: str, bags) -> int:
+    if not bags[bag]:
+        return 1
+    return 1 + sum(n * hold_how_many(b, bags) for (n, b) in bags[bag])
 
 
 if __name__ == "__main__":
