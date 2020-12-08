@@ -1,5 +1,6 @@
-from typing import List, Tuple
+from typing import List, Tuple, Set
 from pathlib import Path
+from collections import defaultdict
 
 from advent_of_code.util import timing
 
@@ -9,9 +10,8 @@ Arg = int
 Instruction = Tuple[OpCode, Arg]
 
 
-def part1(instructions: List[Instruction]) -> Tuple[int, bool]:
+def part1(instructions: List[Instruction], sp: int = 0) -> Tuple[int, bool]:
     acc = 0
-    sp = 0
     visited = set()
     while sp not in visited and sp < len(instructions):
         visited.add(sp)
@@ -27,19 +27,37 @@ def part1(instructions: List[Instruction]) -> Tuple[int, bool]:
     return acc, sp == len(instructions)
 
 
+def _find_reachable(start, predecessors) -> List[int]:
+    reachable: List[int] = [start]
+    for node in predecessors[start]:
+        reachable.extend(_find_reachable(node, predecessors))
+    return reachable
+
+
 def part2(instructions: List[Instruction]) -> int:
-    for i, (op, arg) in enumerate(instructions):
-        if op == "acc":
-            continue
-        if op == "nop":
-            instructions[i] = ("jmp", arg)
-        else:
-            instructions[i] = ("nop", arg)
-        acc, done = part1(instructions)
-        if done:
-            return acc
-        instructions[i] = (op, arg)
-    raise RuntimeError("Problem could not be solved!")
+    predecessors = defaultdict(list)
+    for sp, (inst, arg) in enumerate(instructions):
+        inc = 1 if inst == "nop" or inst == "acc" else arg
+        predecessors[sp + inc].append(sp)
+
+    good_nodes = set(_find_reachable(len(instructions), predecessors))
+
+    acc, sp = 0, 0
+    while sp < len(instructions):
+        inst, arg = instructions[sp]
+        inc = 1
+        if inst == "nop":
+            if sp + arg in good_nodes:
+                return acc + part1(instructions, sp + arg)[0]
+        elif inst == "acc":
+            acc += arg
+        elif inst == "jmp":
+            inc = arg
+            if sp + 1 in good_nodes:
+                return acc + part1(instructions, sp + 1)[0]
+        sp += inc
+
+    raise RuntimeError("Could not swap any jmp/nop to find a non-looping program!")
 
 
 def main() -> None:
