@@ -18,7 +18,7 @@ def main() -> None:
             # Build the forward graph.
             bags[src].append((int(n_bags), bag))
     target_bag = "shiny gold"
-    
+
     # Part 1
     already_searched, can_hold = set(), set()
     yet_to_process = [target_bag]

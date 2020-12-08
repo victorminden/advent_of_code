@@ -64,4 +64,6 @@ int main() {
         });
 
     std::cout << "Part 2: " << std::reduce(intersection_view.begin(), intersection_view.end(), 0) << std::endl;
+
+    return 0;
 }
