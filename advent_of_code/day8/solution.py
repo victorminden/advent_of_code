@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, DefaultDict
 from pathlib import Path
 from collections import defaultdict
 
@@ -27,11 +27,11 @@ def part1(instructions: List[Instruction], sp: int = 0) -> Tuple[int, bool]:
     return acc, sp == len(instructions)
 
 
-def _find_reachable(start, predecessors) -> List[int]:
-    reachable: List[int] = [start]
+def _find_reachable(start: int, predecessors: DefaultDict[int, List[int]], reachable: List[int]) -> None:
+    # Argument `reachable` is modified and used as an output parameter.
+    reachable.append(start)
     for node in predecessors[start]:
-        reachable.extend(_find_reachable(node, predecessors))
-    return reachable
+        _find_reachable(node, predecessors, reachable)
 
 
 def part2(instructions: List[Instruction]) -> int:
@@ -39,8 +39,9 @@ def part2(instructions: List[Instruction]) -> int:
     for sp, (inst, arg) in enumerate(instructions):
         inc = 1 if inst == "nop" or inst == "acc" else arg
         predecessors[sp + inc].append(sp)
-
-    good_nodes = set(_find_reachable(len(instructions), predecessors))
+    reachable = []
+    _find_reachable(len(instructions), predecessors, reachable)
+    good_nodes = set(reachable)
 
     acc, sp = 0, 0
     while sp < len(instructions):
