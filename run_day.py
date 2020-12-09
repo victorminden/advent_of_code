@@ -8,6 +8,7 @@ from advent_of_code.day6.solution import main as day6
 from advent_of_code.day7.solution import main as day7
 from advent_of_code.day8.solution import main as day8
 from advent_of_code.day9.solution import main as day9
+from advent_of_code.day10.solution import main as day10
 
 
 def run_main_for_day(day: int) -> None:
@@ -29,6 +30,8 @@ def run_main_for_day(day: int) -> None:
         day8()
     elif day == 9:
         day9()
+    elif day == 10:
+        day10()
     else:
         raise NotImplementedError(f"No solution found for day {day}")
 

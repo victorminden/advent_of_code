@@ -1,6 +1,6 @@
 from typing import List
 from pathlib import Path
-import itertools
+import collections
 
 from advent_of_code.util import timing
 from advent_of_code.day1.solution import part1 as day1part1
@@ -9,21 +9,24 @@ from advent_of_code.day1.solution import part1 as day1part1
 def part1(ciphertext: List[int]) -> int:
     for i, c in enumerate(ciphertext[25:]):
         try:
-            day1part1(set(ciphertext[i:i+25]), target_sum=c)
+            day1part1(set(ciphertext[i : i + 25]), target_sum=c)
         except RuntimeError:
             return c
 
 
 def part2(ciphertext: List[int], target_sum: int) -> int:
-    for start in range(len(ciphertext)):
-        for end_offset, sum_ in enumerate(itertools.accumulate(ciphertext[start:])):
-            if sum_ > target_sum:
-                break
-            if sum_ == target_sum:
-                range_ = slice(start, start + end_offset + 1)
-                return min(ciphertext[range_]) + max(ciphertext[range_])
-
-    raise RuntimeError
+    # O(n) solution based on discussion with @aaditya.prakash.
+    running_sum = 0
+    queue = collections.deque()
+    numbers = iter(ciphertext)
+    while running_sum != target_sum:
+        if running_sum < target_sum:
+            num = next(numbers)
+            queue.append(num)
+            running_sum += num
+        else:
+            running_sum -= queue.popleft()
+    return min(queue) + max(queue)
 
 
 def main() -> None:
