@@ -31,7 +31,7 @@ def main() -> None:
     print(len(can_hold))
 
     # Part 2
-    print(hold_how_many(target_bag, bags) - 1)  # Subtract 1 to not count the target bag itself.
+    print(hold_how_many(target_bag, bags) - 1)  # Subtract 1 to not count the target_sum bag itself.
 
 
 def hold_how_many(bag: str, bags: DefaultDict[str, List[Tuple[int, str]]]) -> int:
