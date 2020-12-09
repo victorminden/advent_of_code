@@ -1,4 +1,4 @@
-from typing import DefaultDict, List, Tuple
+from typing import DefaultDict, List, Tuple, Dict
 from pathlib import Path
 from collections import defaultdict
 import re
@@ -31,11 +31,18 @@ def main() -> None:
     print(len(can_hold))
 
     # Part 2
-    print(hold_how_many(target_bag, bags) - 1)  # Subtract 1 to not count the target_sum bag itself.
+    print(hold_how_many(target_bag, bags) - 1)  # Subtract 1 to not count target_bag itself.
 
 
-def hold_how_many(bag: str, bags: DefaultDict[str, List[Tuple[int, str]]]) -> int:
-    return 1 if not bags[bag] else 1 + sum(n * hold_how_many(b, bags) for (n, b) in bags[bag])
+def hold_how_many(bag: str, bags: DefaultDict[str, List[Tuple[int, str]]], *, memo: Dict[str, int] = None) -> int:
+    if memo is None:
+        memo = {}
+    if bag in memo:
+        return memo[bag]
+
+    count = 1 if not bags[bag] else 1 + sum(n * hold_how_many(b, bags, memo=memo) for (n, b) in bags[bag])
+    memo[bag] = count
+    return count
 
 
 if __name__ == "__main__":
