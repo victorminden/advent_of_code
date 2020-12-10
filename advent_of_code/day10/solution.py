@@ -1,5 +1,6 @@
-from typing import List, Dict, Tuple
+from typing import List
 from pathlib import Path
+from functools import lru_cache
 import collections
 
 
@@ -11,24 +12,19 @@ def part1(adaptors: List[int]) -> int:
     return c[1] * c[3]
 
 
-def _num_valid(adaptors: List[int], *, idx: int, last: int, memo: Dict[Tuple[int, int], int]) -> int:
-    key = (idx, last)
-    if key in memo:
-        # Short circuit.
-        return memo[key]
-    if adaptors[idx] > last + 3:
-        memo[key] = 0
-    elif idx == len(adaptors) - 1:
-        memo[key] = 1
-    else:
-        memo[key] = _num_valid(adaptors, idx=idx + 1, last=adaptors[idx], memo=memo)
-        memo[key] += _num_valid(adaptors, idx=idx + 1, last=last, memo=memo)
-
-    return memo[key]
-
-
 def part2(adaptors: List[int]) -> int:
-    return _num_valid(adaptors, idx=1, last=0, memo={})
+    @lru_cache(maxsize=None)
+    def num_valid(idx: int, last: int) -> int:
+        if adaptors[idx] > last + 3:
+            # Invalid path, cannot get to the end from here.
+            return 0
+        if idx == len(adaptors) - 1:
+            # Valid path, we are at the end.
+            return 1
+        # Could skip this adaptor, or not.
+        return num_valid(idx + 1, last) + num_valid(idx + 1, adaptors[idx])
+
+    return num_valid(idx=1, last=0)
 
 
 def main() -> None:
