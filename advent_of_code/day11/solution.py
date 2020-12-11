@@ -50,7 +50,7 @@ def _neighbor_map(seat_map: SeatMap, max_scale: Optional[int] = None) -> Neighbo
     return neighbor_map
 
 
-def part1(seat_map: List[List[str]]) -> int:
+def part1(seat_map: SeatMap) -> int:
     return _simulate(seat_map, neighbor_map=_neighbor_map(seat_map, max_scale=1), occupancy_limit=4)
 
 
