@@ -1,112 +1,86 @@
-from typing import List, Tuple, Optional
+from typing import List, Tuple
 from pathlib import Path
-from copy import deepcopy
-import itertools
 import numpy as np
 
 from advent_of_code.util import timing
 
-#dirs = {0: 'E', 30}
+Instruction = Tuple[str, int]
 
-def part1(x) -> int:
-    curr_pos = np.array([0, 0])
-    N = np.array([0, 1])
-    S = np.array([0, -1])
-    E = np.array([-1, 0])
-    W = np.array([1, 0])
-    dir = 'E'
-    for inst, c in x:
-        if inst == 'N':
-            curr_pos += c * N
-        elif inst == 'S':
-            curr_pos += c * S
-        elif inst == 'E':
-            curr_pos += c * E
-        elif inst == 'W':
-            curr_pos += c * W
+_DIRECTIONS = {
+    'N': np.array([0, 1]),
+    'S': np.array([0, -1]),
+    'E': np.array([-1, 0]),
+    'W': np.array([1, 0]),
+}
+
+_MAP_PLUS_90 = {
+    'N': 'E',
+    'S': 'W',
+    'E': 'S',
+    'W': 'N'
+}
+
+_MAP_MINUS_90 = {
+    'N': 'W',
+    'S': 'E',
+    'E': 'N',
+    'W': 'S'
+}
+
+
+def part1(instructions: List[Instruction]) -> int:
+    position = np.array([0, 0], dtype=np.int64)
+    heading = 'E'
+    for inst, c in instructions:
+        if inst in ['N', 'S', 'E', 'W']:
+            position += c * _DIRECTIONS[inst]
         elif inst == 'F':
-            if dir == 'N':
-                curr_pos += c * N
-            elif dir == 'S':
-                curr_pos += c * S
-            elif dir == 'E':
-                curr_pos += c * E
-            elif dir == 'W':
-                curr_pos += c * W
+            position += c * _DIRECTIONS[heading]
         elif inst == 'L':
             while c != 0:
-                if dir == 'N':
-                    dir = 'W'
-                elif dir == 'S':
-                    dir = 'E'
-                elif dir == 'E':
-                    dir = 'N'
-                elif dir == 'W':
-                    dir = 'S'
-                c -= 90
-                #print(c)
-        elif inst == 'R':
-            while c != 0:
-                if dir == 'N':
-                    dir = 'E'
-                elif dir == 'S':
-                    dir = 'W'
-                elif dir == 'E':
-                    dir = 'S'
-                elif dir == 'W':
-                    dir = 'N'
-                c -= 90
-
-    return np.sum(np.abs(curr_pos))
-
-
-def part2(x) -> int:
-    curr_pos = np.array([-10, 1], dtype=np.int64)
-    ship_pos = np.array([0, 0], dtype=np.int64)
-    N = np.array([0, 1])
-    S = np.array([0, -1])
-    E = np.array([-1, 0])
-    W = np.array([1, 0])
-    for inst, c in x:
-        if inst == 'N':
-            curr_pos += c * N
-        elif inst == 'S':
-            curr_pos += c * S
-        elif inst == 'E':
-            curr_pos += c * E
-        elif inst == 'W':
-            curr_pos += c * W
-        elif inst == 'F':
-            disp = (curr_pos - ship_pos)
-            ship_pos += c * disp
-            curr_pos += c * disp
-        elif inst == 'L':
-            while c != 0:
-                disp = (curr_pos - ship_pos)
-                disp[0], disp[1] = disp[1], -disp[0]
-                curr_pos = ship_pos + disp
+                heading = _MAP_MINUS_90[heading]
                 c -= 90
         elif inst == 'R':
             while c != 0:
-                disp = (curr_pos - ship_pos)
-                disp[0], disp[1] = -disp[1], disp[0]
-                curr_pos = ship_pos + disp
+                heading = _MAP_PLUS_90[heading]
                 c -= 90
-        #print(curr_pos, ship_pos)
-    #print(ship_pos)
-    return np.sum(np.abs(ship_pos))
+    return abs(position[0]) + abs(position[1])
+
+
+def part2(instructions: List[Instruction]) -> int:
+    waypoint_position = np.array([-10, 1], dtype=np.int64)
+    ship_position = np.array([0, 0], dtype=np.int64)
+    for inst, c in instructions:
+        if inst in ['N', 'S', 'E', 'W']:
+            waypoint_position += c * _DIRECTIONS[inst]
+            continue
+        displacement = waypoint_position - ship_position
+        if inst == 'F':
+            ship_position += c * displacement
+            waypoint_position += c * displacement
+            continue
+        if inst == 'L':
+            while c != 0:
+                displacement[0], displacement[1] = displacement[1], -displacement[0]
+                c -= 90
+        elif inst == 'R':
+            while c != 0:
+                displacement[0], displacement[1] = -displacement[1], displacement[0]
+                c -= 90
+        waypoint_position = ship_position + displacement
+    return abs(ship_position[0]) + abs(ship_position[1])
 
 
 def main() -> None:
     with open(Path(__file__).parent.joinpath("input.txt")) as file:
-        x = [(line[0], int(line[1:])) for line in file]
+        instructions = [(line[0], int(line[1:])) for line in file]
 
     with timing("Part 1"):
-        solution = part1(x)
+        solution = part1(instructions)
     print(solution)
 
     with timing("Part 2"):
-        solution = part2(x)
+        solution = part2(instructions)
     print(solution)
 
 
