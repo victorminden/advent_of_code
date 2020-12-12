@@ -1,16 +1,36 @@
 from typing import List, Tuple
 from pathlib import Path
-import numpy as np
 
 from advent_of_code.util import timing
 
 Instruction = Tuple[str, int]
 
+
+class Vec:
+    def __init__(self, x=0, y=0):
+        self._vec = [x, y]
+
+    def __getitem__(self, item):
+        return self._vec[item]
+
+    def __setitem__(self, key, value):
+        self._vec[key] = value
+
+    def __add__(self, other):
+        return Vec(self[0] + other[0], self[1] + other[1])
+
+    def __sub__(self, other):
+        return Vec(self[0] - other[0], self[1] - other[1])
+
+    def __rmul__(self, other):
+        return Vec(other * self[0], other * self[1])
+
+
 _DIRECTIONS = {
-    'N': np.array([0, 1]),
-    'S': np.array([0, -1]),
-    'E': np.array([-1, 0]),
-    'W': np.array([1, 0]),
+    'N': Vec(0, 1),
+    'S': Vec(0, -1),
+    'E': Vec(-1, 0),
+    'W': Vec(1, 0),
 }
 
 _MAP_PLUS_90 = {
@@ -29,7 +49,7 @@ _MAP_MINUS_90 = {
 
 
 def part1(instructions: List[Instruction]) -> int:
-    position = np.array([0, 0], dtype=np.int64)
+    position = Vec(0, 0)
     heading = 'E'
     for inst, c in instructions:
         if inst in ['N', 'S', 'E', 'W']:
@@ -48,26 +68,23 @@ def part1(instructions: List[Instruction]) -> int:
 
 
 def part2(instructions: List[Instruction]) -> int:
-    waypoint_position = np.array([-10, 1], dtype=np.int64)
-    ship_position = np.array([0, 0], dtype=np.int64)
+    heading = Vec(-10, 1)
+    ship_position = Vec(0, 0)
     for inst, c in instructions:
         if inst in ['N', 'S', 'E', 'W']:
-            waypoint_position += c * _DIRECTIONS[inst]
+            heading += c * _DIRECTIONS[inst]
             continue
-        displacement = waypoint_position - ship_position
         if inst == 'F':
-            ship_position += c * displacement
-            waypoint_position += c * displacement
+            ship_position += c * heading
             continue
         if inst == 'L':
             while c != 0:
-                displacement[0], displacement[1] = displacement[1], -displacement[0]
+                heading[0], heading[1] = heading[1], -heading[0]
                 c -= 90
         elif inst == 'R':
             while c != 0:
-                displacement[0], displacement[1] = -displacement[1], displacement[0]
+                heading[0], heading[1] = -heading[1], heading[0]
                 c -= 90
-        waypoint_position = ship_position + displacement
     return abs(ship_position[0]) + abs(ship_position[1])
 
 
