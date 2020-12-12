@@ -7,20 +7,15 @@ Instruction = Tuple[str, int]
 
 
 class Vec:
+    """A limited 2D vector class to avoid external dependencies."""
     def __init__(self, x=0, y=0):
-        self._vec = [x, y]
+        self._vec = (x, y)
 
     def __getitem__(self, item):
         return self._vec[item]
 
-    def __setitem__(self, key, value):
-        self._vec[key] = value
-
     def __add__(self, other):
         return Vec(self[0] + other[0], self[1] + other[1])
-
-    def __sub__(self, other):
-        return Vec(self[0] - other[0], self[1] - other[1])
 
     def __rmul__(self, other):
         return Vec(other * self[0], other * self[1])
@@ -33,59 +28,39 @@ _DIRECTIONS = {
     'W': Vec(1, 0),
 }
 
-_MAP_PLUS_90 = {
-    'N': 'E',
-    'S': 'W',
-    'E': 'S',
-    'W': 'N'
-}
 
-_MAP_MINUS_90 = {
-    'N': 'W',
-    'S': 'E',
-    'E': 'N',
-    'W': 'S'
-}
+def _rotate_by_multiple_of_90(vector: Vec, right_or_left: str, angle: int) -> Vec:
+    x, y = vector[0], vector[1]
+    while angle != 0:
+        if right_or_left == 'R':
+            x, y = -y, x
+        else:
+            x, y = y, -x
+        angle -= 90
+    return Vec(x, y)
 
 
-def part1(instructions: List[Instruction]) -> int:
+def _simulate(instructions: List[Instruction], heading: Vec, is_part2: bool = False) -> int:
     position = Vec(0, 0)
-    heading = 'E'
     for inst, c in instructions:
         if inst in ['N', 'S', 'E', 'W']:
-            position += c * _DIRECTIONS[inst]
+            if is_part2:
+                heading += c * _DIRECTIONS[inst]
+            else:
+                position += c * _DIRECTIONS[inst]
         elif inst == 'F':
-            position += c * _DIRECTIONS[heading]
-        elif inst == 'L':
-            while c != 0:
-                heading = _MAP_MINUS_90[heading]
-                c -= 90
-        elif inst == 'R':
-            while c != 0:
-                heading = _MAP_PLUS_90[heading]
-                c -= 90
+            position += c * heading
+        else:
+            heading = _rotate_by_multiple_of_90(heading, inst, c)
     return abs(position[0]) + abs(position[1])
 
 
+def part1(instructions: List[Instruction]) -> int:
+    return _simulate(instructions, heading=_DIRECTIONS['E'], is_part2=False)
+
+
 def part2(instructions: List[Instruction]) -> int:
-    heading = Vec(-10, 1)
-    ship_position = Vec(0, 0)
-    for inst, c in instructions:
-        if inst in ['N', 'S', 'E', 'W']:
-            heading += c * _DIRECTIONS[inst]
-            continue
-        if inst == 'F':
-            ship_position += c * heading
-            continue
-        if inst == 'L':
-            while c != 0:
-                heading[0], heading[1] = heading[1], -heading[0]
-                c -= 90
-        elif inst == 'R':
-            while c != 0:
-                heading[0], heading[1] = -heading[1], heading[0]
-                c -= 90
-    return abs(ship_position[0]) + abs(ship_position[1])
+    return _simulate(instructions, heading=Vec(-10, 1), is_part2=True)
 
 
 def main() -> None:
