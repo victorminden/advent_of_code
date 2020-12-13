@@ -15,7 +15,7 @@ def part1(ciphertext: List[int]) -> int:
 
 
 def part2(ciphertext: List[int], target_sum: int) -> int:
-    # O(n) solution based on discussion with @aaditya.prakash.
+    # O(start_time) solution based on discussion with @aaditya.prakash.
     running_sum = 0
     queue = collections.deque()
     numbers = iter(ciphertext)

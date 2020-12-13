@@ -1,95 +1,57 @@
 from typing import List, Tuple
 from pathlib import Path
+import functools
 
 from advent_of_code.util import timing
 
+BusIndex = int
+BusId = int
+Bus = Tuple[BusIndex, BusId]
 
-def part1(x) -> int:
-    return 0
+
+def _additive_inverse_mod_p(x: int, p: int) -> int:
+    return p - (x % p)
 
 
-def part2(x) -> int:
-    return 0
+def _multiplicative_inverse_mod_p(x: int, p: int) -> int:
+    # Assumes p is prime, uses Fermat.
+    return x ** (p-2)
+
+
+def part1(start_time: int, buses: List[Bus]) -> int:
+    # Pair the bus id with the waiting time for that bus.
+    ids_and_times = ((bus_id, _additive_inverse_mod_p(x=start_time, p=bus_id)) for (_, bus_id) in buses)
+    # Find the bus that will come first, and the time you will have to wait for it.
+    best_id_and_time = min(ids_and_times, key=lambda id_and_time: id_and_time[1])
+    return best_id_and_time[0] * best_id_and_time[1]
+
+
+def _chinese_remainder_theorem(remainders: List[int], primes: List[int]) -> int:
+    big_p = functools.reduce(lambda a, b: a * b, primes, 1)  # Not a prime, but notationally often called "P".
+    x = sum(r * (big_p // p) * _multiplicative_inverse_mod_p(big_p // p, p) for r, p in zip(remainders, primes))
+    return x % big_p
+
+
+def part2(buses: List[Bus]) -> int:
+    return _chinese_remainder_theorem(
+        remainders=[-index for (index, _) in buses],
+        primes=[b_id for (_, b_id) in buses],
+    )
 
 
 def main() -> None:
-    #with open(Path(__file__).parent.joinpath("input.txt")) as file:
-    #    for line in file:
-    #
-    #    my_input = [line for line in file]
+    with open(Path(__file__).parent.joinpath("input.txt")) as file:
+        lines = file.readlines()
+    earliest_time = int(lines[0])
+    buses: List[Bus] = [(index, int(bus_id)) for (index, bus_id) in enumerate(lines[1].split(",")) if bus_id != 'x']
 
-    n = 1015292
-    m = "19,x,x,x,x,x,x,x,x,41,x,x,x,x,x,x,x,x,x,743,x,x,x,x,x,x,x,x,x,x,x,x,13,17,x,x,x,x,x,x,x,x,x,x,x,x,x,x,29,x,643,x,x,x,x,x,37,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,23"
-    #m = "17,x,13,19"
-    #m = "1789,37,47,1889"
-    m = m.split(",")
-    m = [(i,int(j)) for (i,j) in enumerate(m) if j != 'x']
-    M = 1
-    t = 0
-    for (i, j) in m:
-        M *= j
-    for (i,j) in m:
-        b = M // j
-        for bp in range(M):
-            if (bp * b) % j == 1:
-                break
-        #bp = (-b % j)
-        t += (-i) * (b*bp) % M
-    remainder = t % M
-    for (i,j) in m:
-        print((t % j, j - i))
-        print((t + i) % j)
-        print(i% j )
-        #print(((t + M) % j, i))
-    print(remainder)
-    print(t)
-    print(M)
-    # earliest = 100000000
-    # time = 1000000000000000000000
-    # for i in m:
-    #     if i == 'x':
-    #         continue
-    #     i = int(i)
-    #     for j in range(n):
-    #         if j * i >= n:
-    #             time = min(time, j * i - n)
-    #             if time == j * i - n:
-    #                 earliest = i
-    #
-    # print((earliest, time, earliest * time))
-    #t = remainder
-    #tmax = 1202161486
-    #print([(tmax % j, -i % j) for (i,j) in m ] )
-    print(m)
-    print([(t + i) % j == 0 for (i, j) in m])
+    with timing("Part 1"):
+        solution = part1(earliest_time, buses)
+    print(solution)
 
-    # while True:
-    #     found_gud = True
-    #     for i, j in m:
-    #         if i > j:
-    #             gud = (t + i) / j
-    #             if not gud:
-    #                 found_gud = False
-    #     if found_gud:
-    #         break
-    #     if not t % 1000000:
-    #         print(t)
-    #         #print(tmp)
-    #     t += M
-
-    print(t)
-    print(t+M)
-    print(t+2*M)
-    print(t + 3*M)
-
-
-    # with timing("Part 1"):
-    #     solution = part1(my_input)
-    # print(solution)
-    #
-    # with timing("Part 2"):
-    #     solution = part2(my_input)
-    # print(solution)
+    with timing("Part 2"):
+        solution = part2(buses)
+    print(solution)
 
 
 if __name__ == "__main__":
