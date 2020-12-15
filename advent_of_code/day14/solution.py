@@ -4,6 +4,7 @@ import collections
 import copy
 import re
 import enum
+import itertools
 
 from advent_of_code.util import timing
 
@@ -53,24 +54,15 @@ def part2(instructions: List[Instruction]) -> int:
         address_string, value_string = inst
         binary_chars = _make_binary_chars_from_int_string(address_string, len(mask))
         for (i, c) in enumerate(mask):
-            if c == '0':
-                continue
-            binary_chars[i] = c
+            if c != '0':
+                binary_chars[i] = c
 
-        queue = collections.deque([binary_chars])
-        while queue:
-            binary_chars = queue.popleft()
-            try:
-                x_index = binary_chars.index('X')
-            except ValueError:
-                # This is fine.
-                address = int("".join(binary_chars), 2)
-                memory[address] = int(value_string)
-                continue
-            for c in ['0', '1']:
-                new_binary_chars = copy.deepcopy(binary_chars)
-                new_binary_chars[x_index] = c
-                queue.append(new_binary_chars)
+        x_idxs = [i for i, c in enumerate(binary_chars) if c == 'X']
+        for x_vals in itertools.product(["0", "1"], repeat=len(x_idxs)):
+            for idx, val in zip(x_idxs, x_vals):
+                binary_chars[idx] = val
+            address = int("".join(binary_chars), 2)
+            memory[address] = int(value_string)
 
     return sum(memory.values())
 
