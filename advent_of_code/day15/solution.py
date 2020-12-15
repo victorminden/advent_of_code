@@ -7,10 +7,10 @@ from advent_of_code.util import timing
 def part1(numbers: List[int], last_turn: int = 2020) -> int:
     turns = collections.defaultdict(lambda: collections.deque(maxlen=2))
     for i, n in enumerate(numbers):
-        turns[n].append(i + 1)
+        turns[n].append(i)
 
     n = numbers[-1]
-    for turn in range(len(numbers) + 1, last_turn + 1):
+    for turn in range(len(numbers), last_turn):
         try:
             n = turns[n][-1] - turns[n][-2]
         except IndexError:
