@@ -5,6 +5,7 @@ from advent_of_code.util import timing
 
 
 def part1(numbers: List[int], last_turn: int = 2020) -> int:
+    # Thanks to @vincent.billaut for pointing out we could technically use half as much space here (not implemented).
     turns = collections.defaultdict(lambda: collections.deque(maxlen=2))
     for i, n in enumerate(numbers):
         turns[n].append(i)
