@@ -31,10 +31,11 @@ def pretty_print(state):
 
 
 def part1(initial_state: Dict[Coordinate, bool], dim: int = 3) -> int:
-    # We end up explicitly storing a bunch of "False" cells which would be preferable to prune.
     state = {}
     state.update(initial_state)
     for cycle in range(6):
+        # Prune the explicit "False" cells.
+        state = {k: v for k, v in state.items() if v}
         updates: Dict[Coordinate, bool] = {}
         for coord in state:
             neighbors = _neighbors(coord, dim)
