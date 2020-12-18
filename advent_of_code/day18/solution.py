@@ -1,13 +1,24 @@
-from typing import List, Tuple, Dict
+from typing import List, Tuple
 from pathlib import Path
-import copy
-import itertools
-import collections
 
 from advent_of_code.util import timing
 
 
 Expression = str
+
+
+class DumbInt:
+    # Swap addition and multiplication so that they have opposite precedence.
+    def __init__(self, val):
+        self.val = val
+
+    def __add__(self, other):
+        self.val *= other.val
+        return self
+
+    def __mul__(self, other):
+        self.val += other.val
+        return self
 
 
 def _evaluate_expression(expression: Expression) -> Tuple[int, Expression]:
@@ -32,7 +43,7 @@ def _evaluate_expression(expression: Expression) -> Tuple[int, Expression]:
             value += int(next_value)
         elif last_op == '*':
             value *= int(next_value)
-            
+
     return value, tokens
 
 
@@ -40,8 +51,16 @@ def part1(expressions: List[Expression]) -> int:
     return sum(_evaluate_expression(e)[0] for e in expressions)
 
 
+def _evaluate_expression_part2(expression: Expression) -> int:
+    # Convert + to * and convert * to +.
+    expression_flipped = expression.translate(str.maketrans("+*", "*+"))
+    for i in range(10):
+        expression_flipped = expression_flipped.replace(str(i), 'DumbInt(' + str(i) + ')')
+    return eval(expression_flipped).val
+
+
 def part2(expressions: List[Expression]) -> int:
-    return 0
+    return sum(_evaluate_expression_part2(e) for e in expressions)
 
 
 def main() -> None:
@@ -54,9 +73,9 @@ def main() -> None:
         solution = part1(expressions)
     print(solution)
 
-    # with timing("Part 2"):
-    #     solution = part2(initial_state)
-    # print(solution)
+    with timing("Part 2"):
+        solution = part2(expressions)
+    print(solution)
 
 
 if __name__ == "__main__":
