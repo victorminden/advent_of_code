@@ -16,6 +16,7 @@ from advent_of_code.day14.solution import main as day14
 from advent_of_code.day15.solution import main as day15
 from advent_of_code.day16.solution import main as day16
 from advent_of_code.day17.solution import main as day17
+from advent_of_code.day18.solution import main as day18
 
 
 def run_main_for_day(day: int) -> None:
@@ -53,6 +54,8 @@ def run_main_for_day(day: int) -> None:
         day16()
     elif day == 17:
         day17()
+    elif day == 18:
+        day18()
     else:
         raise NotImplementedError(f"No solution found for day {day}")
 
