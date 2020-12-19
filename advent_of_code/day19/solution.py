@@ -1,4 +1,5 @@
 from typing import List, Dict
+import copy
 from pathlib import Path
 import re
 
@@ -6,6 +7,8 @@ from advent_of_code.util import timing
 
 
 def part1(rules: Dict[str, str], messages: List[str]) -> int:
+    rules = copy.deepcopy(rules)
+
     def has_digit(s: str) -> bool:
         return any(c.isdigit() for c in s)
 
@@ -23,7 +26,10 @@ def part1(rules: Dict[str, str], messages: List[str]) -> int:
 
 
 def part2(rules: Dict[str, str], messages: List[str]) -> int:
-    raise NotImplementedError
+    rules = copy.deepcopy(rules)
+    rules["8"] = "42 | 42 42 | 42 42 42 | 42 42 42 42 | 42 42 42 42 42 | 42 42 42 42 42 42 | 42 42 42 42 42 42 42"
+    rules["11"] = "42 31 | 42 42 31 31 | 42 42 42 31 31 31 | 42 42 42 42 31 31 31 31 | 42 42 42 42 42 31 31 31 31 31"
+    return part1(rules, messages)
 
 
 def main() -> None:
