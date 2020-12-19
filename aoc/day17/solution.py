@@ -1,8 +1,6 @@
 from typing import List, Tuple, Dict
 from pathlib import Path
-import copy
 import itertools
-import collections
 
 from aoc.util import timing
 
@@ -53,7 +51,7 @@ def part1(initial_state: Dict[Coordinate, bool], dim: int = 3) -> int:
 
 
 def part2(initial_state: Dict[Coordinate, bool]) -> int:
-    # This takes 90 seconds but who cares.
+    # This takes 10-100 seconds but who cares.
     initial_state_4d = {
         (i, j, k, 0): v for (i, j, k), v in initial_state.items()
     }

@@ -1,13 +1,13 @@
 import sys
-from aoc.day1.solution import main as day1
-from aoc.day2.solution import main as day2
-from aoc.day3.solution import main as day3
-from aoc.day4.solution import main as day4
-from aoc.day5.solution import main as day5
-from aoc.day6.solution import main as day6
-from aoc.day7.solution import main as day7
-from aoc.day8.solution import main as day8
-from aoc.day9.solution import main as day9
+from aoc.day01.solution import main as day01
+from aoc.day02.solution import main as day02
+from aoc.day03.solution import main as day03
+from aoc.day04.solution import main as day04
+from aoc.day05.solution import main as day05
+from aoc.day06.solution import main as day06
+from aoc.day07.solution import main as day07
+from aoc.day08.solution import main as day08
+from aoc.day09.solution import main as day09
 from aoc.day10.solution import main as day10
 from aoc.day11.solution import main as day11
 from aoc.day12.solution import main as day12
@@ -22,23 +22,23 @@ from aoc.day19.solution import main as day19
 
 def run_main_for_day(day: int) -> None:
     if day == 1:
-        day1()
+        day01()
     elif day == 2:
-        day2()
+        day02()
     elif day == 3:
-        day3()
+        day03()
     elif day == 4:
-        day4()
+        day04()
     elif day == 5:
-        day5()
+        day05()
     elif day == 6:
-        day6()
+        day06()
     elif day == 7:
-        day7()
+        day07()
     elif day == 8:
-        day8()
+        day08()
     elif day == 9:
-        day9()
+        day09()
     elif day == 10:
         day10()
     elif day == 11:

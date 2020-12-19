@@ -3,7 +3,7 @@ from pathlib import Path
 import collections
 
 from aoc.util import timing
-from aoc.day1.solution import part1 as day1part1
+from aoc.day01.solution import part1 as day1part1
 
 
 def part1(ciphertext: List[int]) -> int:
