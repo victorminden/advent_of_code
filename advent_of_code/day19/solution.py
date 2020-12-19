@@ -9,11 +9,10 @@ from advent_of_code.util import timing
 def part1(rules: Dict[str, str], messages: List[str]) -> int:
     rules = copy.deepcopy(rules)
 
-    def has_digit(s: str) -> bool:
-        return any(c.isdigit() for c in s)
-
-    while has_digit(rules["0"]):
-        good_key, good_value = next((k, v) for (k, v) in rules.items() if not has_digit(v))
+    # Iterate over the rules, finding the next "concrete" rule (no references to other rules) and substituting it in.
+    # Stop when there is only one rule left -- the grand rule for the entire language (which is rules["0"]).
+    while len(rules) != 1:
+        good_key, good_value = next((k, v) for (k, v) in rules.items() if not any(map(str.isdigit, v)))
         for k, v in rules.items():
             rules[k] = re.sub(rf"\b{good_key}\b", f"({good_value})", v)
         del rules[good_key]
@@ -24,8 +23,9 @@ def part1(rules: Dict[str, str], messages: List[str]) -> int:
 
 def part2(rules: Dict[str, str], messages: List[str]) -> int:
     rules = copy.deepcopy(rules)
-    rules["8"] = "42 | 42 42 | 42 42 42 | 42 42 42 42 | 42 42 42 42 42 | 42 42 42 42 42 42 | 42 42 42 42 42 42 42"
-    rules["11"] = "42 31 | 42 42 31 31 | 42 42 42 31 31 31 | 42 42 42 42 31 31 31 31 | 42 42 42 42 42 31 31 31 31 31"
+    # These are hard-coded to expand the patterns a minimal number of times.
+    rules["8"] = "42 | 42 42 | 42 42 42 | 42 42 42 42 | 42 42 42 42 42"
+    rules["11"] = "42 31 | 42 42 31 31 | 42 42 42 31 31 31 | 42 42 42 42 31 31 31 31"
     return part1(rules, messages)
 
 
