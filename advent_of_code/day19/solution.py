@@ -13,16 +13,13 @@ def part1(rules: Dict[str, str], messages: List[str]) -> int:
         return any(c.isdigit() for c in s)
 
     while has_digit(rules["0"]):
-        good_key = next(k for (k, v) in rules.items() if not has_digit(v))
-        good_value = rules[good_key]
+        good_key, good_value = next((k, v) for (k, v) in rules.items() if not has_digit(v))
         for k, v in rules.items():
-            if k == good_key:
-                continue
             rules[k] = re.sub(rf"\b{good_key}\b", f"({good_value})", v)
         del rules[good_key]
-
-    expr = rules["0"].replace('"', '').replace(' ', '')
-    return sum(re.fullmatch(expr, m) is not None for m in messages)
+        
+    pattern = re.compile(rules["0"].replace('"', '').replace(' ', ''))
+    return sum(pattern.fullmatch(m) is not None for m in messages)
 
 
 def part2(rules: Dict[str, str], messages: List[str]) -> int:
