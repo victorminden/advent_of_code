@@ -1,23 +1,23 @@
 import sys
-from advent_of_code.day1.solution import main as day1
-from advent_of_code.day2.solution import main as day2
-from advent_of_code.day3.solution import main as day3
-from advent_of_code.day4.solution import main as day4
-from advent_of_code.day5.solution import main as day5
-from advent_of_code.day6.solution import main as day6
-from advent_of_code.day7.solution import main as day7
-from advent_of_code.day8.solution import main as day8
-from advent_of_code.day9.solution import main as day9
-from advent_of_code.day10.solution import main as day10
-from advent_of_code.day11.solution import main as day11
-from advent_of_code.day12.solution import main as day12
-from advent_of_code.day13.solution import main as day13
-from advent_of_code.day14.solution import main as day14
-from advent_of_code.day15.solution import main as day15
-from advent_of_code.day16.solution import main as day16
-from advent_of_code.day17.solution import main as day17
-from advent_of_code.day18.solution import main as day18
-from advent_of_code.day19.solution import main as day19
+from aoc.day1.solution import main as day1
+from aoc.day2.solution import main as day2
+from aoc.day3.solution import main as day3
+from aoc.day4.solution import main as day4
+from aoc.day5.solution import main as day5
+from aoc.day6.solution import main as day6
+from aoc.day7.solution import main as day7
+from aoc.day8.solution import main as day8
+from aoc.day9.solution import main as day9
+from aoc.day10.solution import main as day10
+from aoc.day11.solution import main as day11
+from aoc.day12.solution import main as day12
+from aoc.day13.solution import main as day13
+from aoc.day14.solution import main as day14
+from aoc.day15.solution import main as day15
+from aoc.day16.solution import main as day16
+from aoc.day17.solution import main as day17
+from aoc.day18.solution import main as day18
+from aoc.day19.solution import main as day19
 
 
 def run_main_for_day(day: int) -> None:
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     try:
         day = int(sys.argv[1])
     except (IndexError, ValueError):
-        print("Use `python run_day.py start_time` to run the solution for day start_time (integer)")
+        print("Use `python run_day.py day` to run the solution for day `day` (integer)")
         exit(0)
 
     run_main_for_day(day)
