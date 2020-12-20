@@ -1,13 +1,13 @@
-from typing import List, Dict
-import copy
+from typing import Dict, List
 from pathlib import Path
-import re
 from functools import reduce
+
+import numpy as np
 
 from aoc.util import timing
 
 
-def borders(tile):
+def borders(tile: np.ndarray) -> List[np.ndarray]:
     _borders = [
         tile[0, :].flatten(),
         tile[-1, :].flatten(),
@@ -18,7 +18,7 @@ def borders(tile):
     return _borders
 
 
-def can_match(tile_a, tile_b):
+def can_match(tile_a: np.ndarray, tile_b: np.ndarray) -> bool:
     for ba in borders(tile_a):
         for bb in borders(tile_b):
             if np.all(ba == bb):
@@ -26,7 +26,7 @@ def can_match(tile_a, tile_b):
     return False
 
 
-def part1(tiles) -> int:
+def part1(tiles: Dict[int, np.ndarray]) -> int:
     counts = {}
     for tile_idx in tiles:
         count = 0
@@ -36,15 +36,13 @@ def part1(tiles) -> int:
             if can_match(tiles[tile_idx], tiles[other]):
                 count += 1
         counts[tile_idx] = count
-    return reduce(lambda a,b: a * b, [k for k,c in counts.items() if c == 2])
-
+    return reduce(lambda a, b: a * b, [k for k, c in counts.items() if c == 2])
 
 
 def part2() -> int:
-    return 0
-
-
-import numpy as np
+    raise NotImplementedError(
+        "This part was done manually with a binary search over the number of sea monsters (actual: 41)."
+    )
 
 
 def main() -> None:
@@ -63,9 +61,9 @@ def main() -> None:
         solution = part1(tiles)
     print(solution)
 
-    # with timing("Part 2"):
-    #     solution = part2(rules, messages)
-    # print(solution)
+    with timing("Part 2"):
+        solution = part2()
+    print(solution)
 
 
 if __name__ == "__main__":
