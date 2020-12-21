@@ -1,6 +1,5 @@
-from typing import Dict, Set, Tuple
+from typing import Set, Tuple
 from pathlib import Path
-from functools import reduce
 import collections
 
 from aoc.util import timing
@@ -25,18 +24,16 @@ def part1(edges: Set[Edge], ingredients: Set[Node], allergens: Set[Node], raw_fi
 
 def part2(edges: Set[Edge], ingredients: Set[Node], allergens: Set[Node]) -> str:
     translation = {}
-    found_ingredients = allergen_free_ingredients(edges, ingredients, allergens)
-    found_allergens = set()
-    edges = [(a, b) for (a, b) in edges if a not in found_ingredients]
-    while len(found_allergens) < len(allergens):
-        for a in ingredients - found_ingredients:
-            possible_allergens = [b for b in allergens if (a, b) not in edges and b not in found_allergens]
-            if len(possible_allergens) == 1:
-                b = possible_allergens[0]
-                translation[a] = b
-                found_ingredients.add(a)
-                found_allergens.add(b)
-                edges = [(a, b) for (a, b) in edges if a not in found_ingredients and b not in found_allergens]
+    remaining_ingredients = ingredients - allergen_free_ingredients(edges, ingredients, allergens)
+    remaining_allergens = allergens
+    while remaining_allergens:
+        edges = [(a, b) for (a, b) in edges if a in remaining_ingredients and b in remaining_allergens]
+        degrees = collections.Counter(a for (a, b) in edges)
+        a = next(a for a in remaining_ingredients if degrees[a] == len(remaining_allergens) - 1)
+        b = next(b for b in remaining_allergens if (a, b) not in edges)
+        translation[a] = b
+        remaining_ingredients.remove(a)
+        remaining_allergens.remove(b)
 
     return ",".join((kv[0] for kv in sorted(translation.items(), key=lambda kv: kv[1])))
 
