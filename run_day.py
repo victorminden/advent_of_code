@@ -22,6 +22,7 @@ from aoc.day20.solution import main as day20
 from aoc.day21.solution import main as day21
 from aoc.day22.solution import main as day22
 from aoc.day23.solution import main as day23
+from aoc.day24.solution import main as day24
 
 
 def run_main_for_day(day: int) -> None:
@@ -71,6 +72,8 @@ def run_main_for_day(day: int) -> None:
         day22()
     elif day == 23:
         day23()
+    elif day == 24:
+        day24()
     else:
         raise NotImplementedError(f"No solution found for day {day}")
 
