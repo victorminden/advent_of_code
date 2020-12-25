@@ -6,22 +6,15 @@ from aoc.util import timing
 
 
 def part1(pub1: int, pub2: int) -> int:
-    return _transform(pub2, _loop_size(pub1))
-
-
-def _transform(pub: int, loop_size: int) -> int:
-    n = 1
-    for _ in range(loop_size):
-        n = (pub * n) % 20201227
-    return n
+    return pow(pub2, _loop_size(pub1), 20201227)
 
 
 def _loop_size(pub: int) -> int:
     n = 1
-    for loop_size in itertools.count(1):
-        n = (7 * n) % 20201227
+    for i in itertools.count():
         if n == pub:
-            return loop_size
+            return i
+        n = (7 * n) % 20201227
 
 
 def main() -> None:
