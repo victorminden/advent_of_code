@@ -1,6 +1,4 @@
-
 import itertools
-
 
 from aoc.util import timing
 
