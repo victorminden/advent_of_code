@@ -25,7 +25,7 @@ def part1(directions: List[Tuple[str, int]]) -> int:
     return state.x * state.y
 
 
-def part2(directions: List[int]) -> int:
+def part2(directions: List[Tuple[str, int]]) -> int:
     state = SubmarineState()
     for (dir, scale) in directions:
         match dir:
