@@ -1,7 +1,7 @@
 import sys
 from aoc.day01.solution import main as day01
 from aoc.day02.solution import main as day02
-#from aoc.day03.solution import main as day03
+from aoc.day03.solution import main as day03
 #from aoc.day04.solution import main as day04
 #from aoc.day05.solution import main as day05
 #from aoc.day06.solution import main as day06
@@ -31,8 +31,8 @@ def run_main_for_day(day: int) -> None:
         day01()
     elif day == 2:
         day02()
-#    elif day == 3:
-#        day03()
+    elif day == 3:
+        day03()
 #    elif day == 4:
 #        day04()
 #    elif day == 5:
