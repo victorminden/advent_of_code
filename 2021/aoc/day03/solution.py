@@ -18,6 +18,8 @@ def bits2int(bits: BinaryInt) -> int:
 def round_right(x: float) -> int:
     """Returns the result of rounding input `x` to the nearest int.
 
+    This function only works for `0 <= x <= 1`.
+
     Unlike the built-in python `round` function, this function always rounds 0.5
     *up*.  In contrast, python rounds to the nearest even integer in this case,
     e.g.:
