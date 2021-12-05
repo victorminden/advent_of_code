@@ -23,7 +23,7 @@ Point: TypeAlias = Tuple[int, int]
 class LineSegment:
     """A class for representing line segments.
 
-    The methods are only guaranteed to work properly for ling segments that are
+    The methods are only guaranteed to work properly for line segments that are
     horizontal, vertical, or 45 degrees, but no validation is performed.
     """
     def __init__(self, start: Point, end: Point) -> None:
