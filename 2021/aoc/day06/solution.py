@@ -1,5 +1,5 @@
 from collections import Counter
-from typing import List, Tuple, TypeAlias
+from typing import List, TypeAlias
 
 from aoc.util import timing
 
