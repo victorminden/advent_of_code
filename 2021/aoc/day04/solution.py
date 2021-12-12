@@ -74,7 +74,7 @@ def part2(numbers: BingoNumbers, boards: List[BingoBoard]) -> int:
     raise RuntimeError("Oops.")
 
 
-def string2ints(string: List[str], sep: str=None) -> List[int]:
+def string2ints(string: List[str], sep: str = None) -> List[int]:
     """Splits the input `string` on separator `sep` and converts all to ints.
 
     Cleans up leading and trailing whitespace in the input first.
