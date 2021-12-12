@@ -75,7 +75,8 @@ def part2(codes: List[BinaryInt]) -> int:
 def main() -> None:
     with open(Path(__file__).parent.joinpath("input.txt")) as file:
         codes: List[BinaryInt] = [
-            [int(b) for b in line.strip()] for line in file]
+            [int(b) for b in line.strip()] for line in file
+        ]
 
     with timing("Part 1"):
         solution = part1(codes)
