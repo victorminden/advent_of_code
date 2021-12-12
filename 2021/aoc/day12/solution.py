@@ -27,7 +27,7 @@ def part1(nodes: AdjList) -> int:
     def can_append(path: CavePath, node: Cave) -> bool:
         """Returns True if the node can be appended to the path, else False.
 
-        An uppercase node can always be oppended, but other nodes can be visited
+        An uppercase node can always be appended, but other nodes can be visited
         at most once.
         """
         return node.isupper() or node not in path
