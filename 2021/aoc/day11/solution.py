@@ -11,7 +11,8 @@ def neighbors(i: int, j: int, m: int, n: int) -> Iterator[Tuple[int, int]]:
     Neighbors must be adjacent to the original point and diagonals count.
     """
     for (delta_i, delta_j) in product((-1, 0, 1), (-1, 0, 1)):
-        if delta_i == 0 and delta_j == 0: pass
+        if delta_i == 0 and delta_j == 0:
+            pass
         ii, jj = i + delta_i, j + delta_j
         if 0 <= ii < m and 0 <= jj < n:
             yield ii, jj
@@ -28,13 +29,16 @@ def will_flash(octopus: int) -> bool:
 def any_flashers(octopods: List[List[int]], used: Set[Tuple[int, int]]) -> bool:
     m, n = len(octopods), len(octopods[0])
     for (i, j) in product(range(m), range(n)):
-        if (i, j) in used: continue
-        if will_flash(octopods[i][j]): return True
+        if (i, j) in used:
+            continue
+        if will_flash(octopods[i][j]):
+            return True
     return False
 
 
 def simulate_flashes(
-    octopods: List[List[int]], steps: int) -> Tuple[int, Optional[int]]:
+    octopods: List[List[int]], steps: int
+) -> Tuple[int, Optional[int]]:
     """Returns the number of total flashes and the first synchronized step.
 
     The first synchronized step will be None if the octopods did not synchronize
@@ -47,13 +51,18 @@ def simulate_flashes(
         used = set()
         while any_flashers(octopods, used):
             for (i, j) in product(range(m), range(n)):
-                if (i, j) in used: continue
-                if not will_flash(octopods[i][j]): continue
-                for (ii, jj) in neighbors(i, j, m, n): octopods[ii][jj] += 1
+                if (i, j) in used:
+                    continue
+                if not will_flash(octopods[i][j]):
+                    continue
+                for (ii, jj) in neighbors(i, j, m, n):
+                    octopods[ii][jj] += 1
                 used.add((i, j))
-        for (i, j) in used: octopods[i][j] = 0
+        for (i, j) in used:
+            octopods[i][j] = 0
         flash_count += len(used)
-        if len(used) ==  m * n: return flash_count, step + 1
+        if len(used) == m * n:
+            return flash_count, step + 1
 
     return flash_count, None
 
@@ -64,14 +73,15 @@ def part1(octopods: List[List[int]], steps: int = 100) -> int:
 
 def part2(octopods: List[List[int]], steps: int = 1000) -> int:
     sync_step = simulate_flashes(octopods, steps)[1]
-    if sync_step is None: raise RuntimeError("Did not simulate enough steps.")
+    if sync_step is None:
+        raise RuntimeError("Did not simulate enough steps.")
     return sync_step
 
 
 def main() -> None:
     octopods: List[List[int]] = []
     with open(Path(__file__).parent.joinpath("input.txt")) as file:
-        octopods= [[int(c) for c in line.strip()] for line in file]
+        octopods = [[int(c) for c in line.strip()] for line in file]
 
     with timing("Part 1"):
         solution = part1(octopods)
