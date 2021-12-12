@@ -12,11 +12,13 @@ def flip_bracket(c: str) -> str:
 
 def corruption_score(line: str) -> int:
     """Returns a score for the line if it is corrupted, or zero otherwise."""
-    BRACKET_SCORE = {')': 3, ']': 57, '}': 1197, '>': 25137}
+    BRACKET_SCORE = {")": 3, "]": 57, "}": 1197, ">": 25137}
     stack = []
     for c in line:
-        if c in "([{<": stack.append(c)
-        elif c != flip_bracket(stack.pop()): return BRACKET_SCORE[c]
+        if c in "([{<":
+            stack.append(c)
+        elif c != flip_bracket(stack.pop()):
+            return BRACKET_SCORE[c]
     return 0
 
 
@@ -28,10 +30,12 @@ def completion_score(line: str) -> int:
     """Returns a score for the line assuming it is not corrupted."""
     stack = []
     for c in line:
-        if c in "([{<": stack.append(c)
-        else: stack.pop()
+        if c in "([{<":
+            stack.append(c)
+        else:
+            stack.pop()
 
-    BRACKET_SCORE = {')': 1, ']': 2, '}': 3, '>': 4}
+    BRACKET_SCORE = {")": 1, "]": 2, "}": 3, ">": 4}
     score = 0
     for c in reversed(stack):
         score = score * 5 + BRACKET_SCORE[flip_bracket(c)]
@@ -40,7 +44,8 @@ def completion_score(line: str) -> int:
 
 def part2(lines: List[str]) -> int:
     return median(
-        completion_score(line) for line in lines if corruption_score(line) == 0)
+        completion_score(line) for line in lines if corruption_score(line) == 0
+    )
 
 
 def main() -> None:
