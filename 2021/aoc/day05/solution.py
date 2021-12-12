@@ -12,8 +12,10 @@ def min_max(a: int, b: int) -> Tuple[int, int]:
 
 def sign(x: int) -> int:
     """Returns the sign of x, with sign(0) == 0."""
-    if x > 0: return 1
-    if x < 0: return -1
+    if x > 0:
+        return 1
+    if x < 0:
+        return -1
     return 0
 
 
@@ -26,6 +28,7 @@ class LineSegment:
     The methods are only guaranteed to work properly for line segments that are
     horizontal, vertical, or 45 degrees, but no validation is performed.
     """
+
     def __init__(self, start: Point, end: Point) -> None:
         self._start = start
         self._end = end
