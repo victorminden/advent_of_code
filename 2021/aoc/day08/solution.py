@@ -25,7 +25,8 @@ def easy_digits_map(digits: Digits) -> Dict[int, Set[str]]:
         7: 8,
     }
     return {
-        len2digit[len(d)]: set(d) for d in digits if d in easy_digits(digits)}
+        len2digit[len(d)]: set(d) for d in digits if d in easy_digits(digits)
+    }
 
 
 def decode_outputs(in_digits: Digits, out_digits: Digits) -> List[int]:
@@ -34,7 +35,7 @@ def decode_outputs(in_digits: Digits, out_digits: Digits) -> List[int]:
     # Fill in the easy digits.
     known = easy_digits_map(in_digits)
     # By inspection, can determine 'a'.
-    decoded['a'] = known[7] - known[1]
+    decoded["a"] = known[7] - known[1]
     # "3" is the unique digit that has 3 segments more than "1".
     for d in in_digits:
         putative_3 = set(d)
@@ -42,9 +43,9 @@ def decode_outputs(in_digits: Digits, out_digits: Digits) -> List[int]:
             known[3] = putative_3
             break
     # By inspection, can determine 'b', 'g', and 'd'.
-    decoded['b'] = known[4] - known[7] - known[3]
-    decoded['g'] = known[3] - known[4] - known[7]
-    decoded['d'] = known[3] - known[1] - decoded['a'] - decoded['g']
+    decoded["b"] = known[4] - known[7] - known[3]
+    decoded["g"] = known[3] - known[4] - known[7]
+    decoded["d"] = known[3] - known[1] - decoded["a"] - decoded["g"]
     # If we remove all known segments from all digits, there will be one unique
     # digit with one remaining segment.  That segment is 'f'.
     for d in in_digits:
@@ -52,10 +53,10 @@ def decode_outputs(in_digits: Digits, out_digits: Digits) -> List[int]:
         for v in decoded.values():
             putative_f -= v
         if len(putative_f) == 1:
-            decoded['f'] = putative_f
+            decoded["f"] = putative_f
             break
     # By inspection, can determine 'c'.
-    decoded['c'] = known[1] - decoded['f']
+    decoded["c"] = known[1] - decoded["f"]
     # If we remove all known segments from all digits, there will be one unique
     # digit with one remaining segment.  That segment is 'e'.
     for d in in_digits:
@@ -63,7 +64,7 @@ def decode_outputs(in_digits: Digits, out_digits: Digits) -> List[int]:
         for v in decoded.values():
             putative_e -= v
         if len(putative_e) == 1:
-            decoded['e'] = putative_e
+            decoded["e"] = putative_e
             break
 
     assert len(decoded) == 7, "Logic snafu!"
@@ -98,7 +99,7 @@ def decode_outputs(in_digits: Digits, out_digits: Digits) -> List[int]:
             if set(d) == v:
                 outputs.append(str(k))
                 break
-    return int(''.join(outputs))
+    return int("".join(outputs))
 
 
 def part2(input_lines: DigitLines, output_lines: DigitLines) -> int:
