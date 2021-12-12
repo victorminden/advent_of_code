@@ -54,7 +54,8 @@ def part2(zs: List[List[int]]) -> int:
     # Figure out the sizes of the three largest basins and multiply them
     # together to generate the final answer.
     sorted_sizes = list(
-        sorted(map(lambda x: len(x), basins_by_low_point.values())))
+        sorted(map(lambda x: len(x), basins_by_low_point.values()))
+    )
     return sorted_sizes[-3] * sorted_sizes[-2] * sorted_sizes[-1]
 
 
