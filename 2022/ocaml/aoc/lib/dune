@@ -1,0 +1,6 @@
+(library
+ (name aoc)
+ (libraries base core_kernel.pairing_heap core_unix.filename_unix str)
+ (inline_tests)
+ (preprocess
+  (pps ppx_inline_test ppx_assert)))

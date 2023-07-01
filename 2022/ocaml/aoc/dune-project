@@ -1,0 +1,20 @@
+(lang dune 3.8)
+
+(name aoc)
+
+(generate_opam_files false)
+
+(source
+ (github victorminden/advent_of_code))
+
+(authors "Victor Minden")
+
+(maintainers "Victor Minden")
+
+(license MIT)
+
+(package
+ (name aoc)
+ (synopsis "Solutions to advent of code 2022")
+ (depends ocaml dune))
+
