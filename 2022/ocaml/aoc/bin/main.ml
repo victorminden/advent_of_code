@@ -5,6 +5,8 @@ let ( >> ) f g x = g (f x)
 let day_runner = function
   | 1, 'a' -> Aoc.Day01.part_one >> string_of_int >> print_endline
   | 1, 'b' -> Aoc.Day01.part_two >> string_of_int >> print_endline
+  | 2, 'a' -> Aoc.Day02.part_one >> string_of_int >> print_endline
+  | 2, 'b' -> Aoc.Day02.part_two >> string_of_int >> print_endline
   | _ -> failwith "unrecognized day or part"
 
 let command =
