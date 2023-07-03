@@ -1,7 +1,7 @@
 open Core
+open Util
 
 let sums s =
-  let not_empty s = not (String.equal "" s) in
   let sum_lines s =
     s |> String.split ~on:'\n' |> List.filter ~f:not_empty
     |> List.map ~f:Int.of_string |> List.fold ~init:0 ~f:( + )

@@ -1,4 +1,5 @@
 open Core
+open Util
 
 let shape_score = function
   | 'X' -> 1
@@ -13,7 +14,6 @@ let pair_score = function
   | _ -> failwith "Bad pair"
 
 let list_of_pairs s =
-  let not_empty s = not (String.equal "" s) in
   s |> String.split ~on:'\n' |> List.filter ~f:not_empty
   |> List.map ~f:(fun s -> (s.[0], s.[2]))
 
