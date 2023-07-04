@@ -1,14 +1,11 @@
 open Core
-open Util
 
 let sums s =
   let sum_lines s =
-    s |> String.split ~on:'\n' |> List.filter ~f:not_empty
+    s |> String.split_lines |> List.map ~f:String.strip
     |> List.map ~f:Int.of_string |> List.fold ~init:0 ~f:( + )
   in
-  s
-  |> Str.split (Str.regexp "\n\n")
-  |> List.filter ~f:not_empty |> List.map ~f:sum_lines
+  s |> Str.split (Str.regexp "\n\n") |> List.map ~f:sum_lines
 
 let part_one s = s |> sums |> List.fold ~init:Int.min_value ~f:max
 
@@ -25,8 +22,7 @@ let part_two s =
   Pairing_heap.fold h ~init:0 ~f:( + )
 
 let example_data =
-  {|
-        1000
+  {|    1000
         2000
         3000
 
@@ -41,8 +37,6 @@ let example_data =
 
         10000
 |}
-  |> String.split ~on:'\n' |> List.tl_exn |> List.map ~f:String.strip
-  |> String.concat ~sep:"\n"
 
 let%test_unit "part_one" = [%test_eq: int] (example_data |> part_one) 24000
 let%test_unit "part_two" = [%test_eq: int] (example_data |> part_two) 45000
