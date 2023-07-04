@@ -2,15 +2,18 @@ open Core
 open Aoc
 open Aoc.Util
 
+(* Note: shadows deprecated Core function *)
+let print_int = string_of_int >> print_endline
+
 let day_runner = function
-  | 1, 'a' -> Day01.part_one >> string_of_int >> print_endline
-  | 1, 'b' -> Day01.part_two >> string_of_int >> print_endline
-  | 2, 'a' -> Day02.part_one >> string_of_int >> print_endline
-  | 2, 'b' -> Day02.part_two >> string_of_int >> print_endline
-  | 3, 'a' -> Day03.part_one >> string_of_int >> print_endline
-  | 3, 'b' -> Day03.part_two >> string_of_int >> print_endline
-  | 4, 'a' -> Day04.part_one >> string_of_int >> print_endline
-  | 4, 'b' -> Day04.part_two >> string_of_int >> print_endline
+  | 1, 'a' -> Day01.part_one >> print_int
+  | 1, 'b' -> Day01.part_two >> print_int
+  | 2, 'a' -> Day02.part_one >> print_int
+  | 2, 'b' -> Day02.part_two >> print_int
+  | 3, 'a' -> Day03.part_one >> print_int
+  | 3, 'b' -> Day03.part_two >> print_int
+  | 4, 'a' -> Day04.part_one >> print_int
+  | 4, 'b' -> Day04.part_two >> print_int
   | 5, 'a' -> Day05.part_one >> print_endline
   | 5, 'b' -> Day05.part_two >> print_endline
   | _ -> failwith "unrecognized day or part"
