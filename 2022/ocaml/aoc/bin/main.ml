@@ -11,6 +11,8 @@ let day_runner = function
   | 3, 'b' -> Day03.part_two >> string_of_int >> print_endline
   | 4, 'a' -> Day04.part_one >> string_of_int >> print_endline
   | 4, 'b' -> Day04.part_two >> string_of_int >> print_endline
+  | 5, 'a' -> Day05.part_one >> print_endline
+  | 5, 'b' -> Day05.part_two >> print_endline
   | _ -> failwith "unrecognized day or part"
 
 let command =
