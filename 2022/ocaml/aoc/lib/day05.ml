@@ -1,13 +1,14 @@
 open Core
+open Util
 
 let parse s =
   let parse_boxes s' =
     let lines = s' |> String.split_lines |> List.rev in
-    let count =
-      lines |> List.hd_exn |> Str.split (Str.regexp "  ") |> List.length
-    in
+    let count_line = lines |> List.hd_exn in
+    let box_lines = lines |> List.tl_exn in
+    let count = count_line |> Str.split (Str.regexp "  ") |> List.length in
     let boxes = Array.init count ~f:(fun _ -> Stack.create ()) in
-    let parse line =
+    let parse_line line =
       let i = ref 0 in
       while !i < count do
         (match String.sub ~pos:(4 * !i) ~len:3 line with
@@ -16,7 +17,7 @@ let parse s =
         Int.incr i
       done
     in
-    lines |> List.tl_exn |> List.iter ~f:parse;
+    box_lines |> List.iter ~f:parse_line;
     boxes
   in
   let parse_instructions s' =
@@ -30,10 +31,8 @@ let parse s =
   | [ b; i ] -> (parse_boxes b, parse_instructions i)
   | _ -> failwith "Bad input"
 
-let read_tops boxes =
-  boxes
-  |> Array.map ~f:(fun box -> Stack.top_exn box)
-  |> Array.to_list |> String.of_char_list
+let read_tops =
+  Array.map ~f:Stack.top_exn >> Array.to_list >> String.of_char_list
 
 let part_one s =
   let boxes, instructions = parse s in
