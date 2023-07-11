@@ -1,3 +1,8 @@
+(ocamllex day13_lexer)
+
+(menhir
+ (modules day13_parser))
+
 (library
  (name aoc)
  (libraries base core_kernel.pairing_heap core_unix.filename_unix str)
