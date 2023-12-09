@@ -47,7 +47,6 @@ fun handToType(hand: String): HandType {
     return when {
         counts.contains(5) -> HandType.FIVE_OF_A_KIND
         counts.contains(4) -> HandType.FOUR_OF_A_KIND
-        jokersCount > 3 -> HandType.FOUR_OF_A_KIND
         counts.contains(3) && counts.contains(2) -> HandType.FULL_HOUSE
         counts.contains(3) -> HandType.THREE_OF_A_KIND
         counts.count { it == 2 } == 2 -> HandType.TWO_PAIR
