@@ -1,25 +1,42 @@
-fun String.toChunkList(): List<Int> = this.split("\\.+".toRegex()).map { it.count() }
-
-fun String.isComplete(): Boolean = this.count { it == '?' } == 0
-
-fun String.matchesCounts(counts: List<Int>): Boolean =
-    when {
-        !this.isComplete() -> false
-        else -> this.trim('.').toChunkList() == counts
-    }
+fun Boolean.toInt() = if (this) 1 else 0
 
 fun countArrangements(
     glyphs: String,
     counts: List<Int>,
-    remaining: Int,
+    currentCount: Int = 0,
 ): Int {
-    when {
-        remaining == 0 && glyphs.replace('?', '.').matchesCounts(counts) -> return 1
-        remaining == 0 || glyphs.isComplete() -> return 0
+    if (glyphs.count() == 0) {
+        return when (counts.count()) {
+            0 -> 1
+            1 -> (counts[0] == currentCount).toInt()
+            else -> 0
+        }
+    }
+    if (counts.count() == 0) {
+        return (!glyphs.any { it == '#' }).toInt()
     }
 
-    return countArrangements(glyphs.replaceFirst('?', '.'), counts, remaining) +
-        countArrangements(glyphs.replaceFirst('?', '#'), counts, remaining - 1)
+    val head = glyphs.take(1)
+    val tail = glyphs.drop(1)
+
+    if (head == "#") {
+        // Add to current (possibly empty) group.
+        // If it is too big, there are no solutions.
+        val newCount = currentCount + 1
+        if (newCount > counts[0]) return 0
+        return countArrangements(tail, counts, newCount)
+    }
+
+    if (head == ".") {
+        // If we are not closing a group, just keep going.
+        if (currentCount == 0) return countArrangements(tail, counts, 0)
+        // Otherwise, if we closed a group of the wrong size, there are no solutions.
+        if (currentCount != counts[0]) return 0
+        return countArrangements(tail, counts.drop(1), 0)
+    }
+
+    return countArrangements("." + tail, counts, currentCount) +
+        countArrangements("#" + tail, counts, currentCount)
 }
 
 fun main() {
@@ -27,7 +44,6 @@ fun main() {
         val (glyphs, counts) = line.trim().split(' ')
         Pair(glyphs, counts.split(',').map { it.toInt() })
     }.toList().sumOf { (glyphs, counts) ->
-        val missingGlyphCount = counts.sum() - glyphs.count { it == '#' }
-        countArrangements(glyphs, counts, missingGlyphCount)
+        countArrangements(glyphs, counts)
     }.let { result -> println(result) }
 }
